@@ -145,7 +145,19 @@ class HotelVC: UIViewController {
     
     private var containerHeightConstraint: NSLayoutConstraint = NSLayoutConstraint()
     
+    private lazy var detailedDataTableView: UITableView = {
+        let table = UITableView()
+        table.translatesAutoresizingMaskIntoConstraints = false
+        table.delegate = self
+        table.dataSource = self
+        table.isScrollEnabled = false
+        table.backgroundColor = .clear
+        table.register(UITableViewCell.self, forCellReuseIdentifier: "Identifier")
+        return table
+    }()
     
+    private let detailDataArray = ["Удобства", "Что включено", "Что не включено"]
+    private let detailDataImage: [UIImage?] = [UIImage(named: "emoji"), UIImage(named: "tick"), UIImage(named: "close")]
     
     //MARK: - viewDidLoad()
     override func viewDidLoad() {
@@ -168,15 +180,15 @@ class HotelVC: UIViewController {
         setupAboutHotelLabelConstraints()
         setupPeculiaritiesViewConstraints()
         setupDescriptionLabelConstraints()
-       
-        
+        setupDetailedDataTableView()
+        detailedDataTableView.separatorStyle = .none
+
     }
     
     //MARK: - viewDidLayoutSubviews()
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         displayTagLabels()
-        print("PeculiaritiesView height: \(peculiaritiesView.frame.height)")
     }
     
     //MARK: - Setup Constraints
@@ -356,7 +368,7 @@ class HotelVC: UIViewController {
         descriptionLabel.adjustsFontSizeToFitWidth = true
         descriptionLabel.minimumScaleFactor = 0.5
         NSLayoutConstraint.activate([
-            descriptionLabel.topAnchor.constraint(equalTo: peculiaritiesView.bottomAnchor, constant: 12),
+            descriptionLabel.topAnchor.constraint(equalTo: peculiaritiesView.bottomAnchor, constant: 16),
             descriptionLabel.leftAnchor.constraint(equalTo: aboutHotelView.leftAnchor, constant: 16),
             descriptionLabel.heightAnchor.constraint(equalToConstant: 76),
             descriptionLabel.rightAnchor.constraint(equalTo: aboutHotelView.rightAnchor, constant: -16)
@@ -417,5 +429,106 @@ class HotelVC: UIViewController {
         containerHeightConstraint.constant = currentOriginY + tagHeight
         
     }
+    
+    private func setupDetailedDataTableView() {
+        aboutHotelView.addSubview(detailedDataTableView)
+        
+        detailedDataTableView.layer.cornerRadius = 15
+        detailedDataTableView.layer.masksToBounds = true
+        NSLayoutConstraint.activate([
+            detailedDataTableView.topAnchor.constraint(equalTo: descriptionLabel.bottomAnchor, constant: 16),
+            detailedDataTableView.leftAnchor.constraint(equalTo: aboutHotelView.leftAnchor, constant: 16),
+            detailedDataTableView.rightAnchor.constraint(equalTo: aboutHotelView.rightAnchor, constant: -16),
+            detailedDataTableView.heightAnchor.constraint(equalToConstant: 183)
+        ])
+    }
+    
+}
+
+extension HotelVC: UITableViewDelegate, UITableViewDataSource {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return 3
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "Identifier", for: indexPath)
+        cell.accessoryType = .disclosureIndicator
+        
+       
+        let model = detailDataArray[indexPath.row]
+        let image = detailDataImage[indexPath.row]
+        
+        var listConfiguration = cell.defaultContentConfiguration()
+        listConfiguration.text = model
+        listConfiguration.textProperties.font = UIFont.systemFont(ofSize: 16)
+        listConfiguration.secondaryText = "Самое необходимое"
+        listConfiguration.secondaryTextProperties.font = UIFont.systemFont(ofSize: 14)
+        listConfiguration.secondaryTextProperties.color = UIColor.gray
+        
+        // Создаем специальное содержимое для хранения изображения и меток
+        let customContentView = UIView()
+        customContentView.translatesAutoresizingMaskIntoConstraints = false
+        cell.contentView.addSubview(customContentView)
+        
+        // Изображение для фотографии
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.image = image
+        imageView.contentMode = .scaleAspectFill
+        imageView.layer.masksToBounds = true
+        customContentView.addSubview(imageView)
+        
+        // Метка для текста
+        let textLabel = UILabel()
+        textLabel.translatesAutoresizingMaskIntoConstraints = false
+        textLabel.text = listConfiguration.text
+        textLabel.font = listConfiguration.textProperties.font
+        customContentView.addSubview(textLabel)
+        
+        // Метка для вторичного текста
+        let secondaryLabel = UILabel()
+        secondaryLabel.translatesAutoresizingMaskIntoConstraints = false
+        secondaryLabel.text = listConfiguration.secondaryText
+        secondaryLabel.font = listConfiguration.secondaryTextProperties.font
+        secondaryLabel.textColor = listConfiguration.secondaryTextProperties.color
+        customContentView.addSubview(secondaryLabel)
+        
+        // Настраиваем ограничения для специального содержимого, изображения и меток
+        NSLayoutConstraint.activate([
+            customContentView.leadingAnchor.constraint(equalTo: cell.contentView.leadingAnchor, constant: 16),
+            customContentView.trailingAnchor.constraint(equalTo: cell.contentView.trailingAnchor, constant: -16),
+            customContentView.topAnchor.constraint(equalTo: cell.contentView.topAnchor, constant: 8),
+            customContentView.bottomAnchor.constraint(equalTo: cell.contentView.bottomAnchor, constant: -8),
+            
+            imageView.leadingAnchor.constraint(equalTo: customContentView.leadingAnchor),
+            imageView.centerYAnchor.constraint(equalTo: customContentView.centerYAnchor),
+            imageView.widthAnchor.constraint(equalToConstant: 24),
+            imageView.heightAnchor.constraint(equalToConstant: 24),
+            
+            textLabel.leadingAnchor.constraint(equalTo: imageView.trailingAnchor, constant: 8),
+            textLabel.topAnchor.constraint(equalTo: customContentView.topAnchor),
+            
+            secondaryLabel.leadingAnchor.constraint(equalTo: imageView.trailingAnchor, constant: 8),
+            secondaryLabel.topAnchor.constraint(equalTo: textLabel.bottomAnchor, constant: 4),
+            secondaryLabel.trailingAnchor.constraint(equalTo: customContentView.trailingAnchor),
+            secondaryLabel.bottomAnchor.constraint(lessThanOrEqualTo: customContentView.bottomAnchor),
+        ])
+        
+        cell.backgroundColor = UIColor(red: 251/255, green: 251/255, blue: 252/255, alpha: 1.0)
+        
+        
+        return cell
+    }
+    
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 61
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+            // Не выполняйте никаких действий при нажатии на ячейку
+            tableView.deselectRow(at: indexPath, animated: true)
+        }
+    
     
 }
