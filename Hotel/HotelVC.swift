@@ -139,7 +139,7 @@ class HotelVC: UIViewController {
     private var tagLabels = [UILabel]()
     
     private let tagHeight:CGFloat = 29
-    private let tagPadding: CGFloat = 16
+    private let tagPadding: CGFloat = 12
     private let tagSpacingX: CGFloat = 8
     private let tagSpacingY: CGFloat = 8
     
@@ -182,7 +182,7 @@ class HotelVC: UIViewController {
         setupDescriptionLabelConstraints()
         setupDetailedDataTableView()
         detailedDataTableView.separatorStyle = .none
-
+        
     }
     
     //MARK: - viewDidLayoutSubviews()
@@ -381,7 +381,7 @@ class HotelVC: UIViewController {
         containerHeightConstraint = peculiaritiesView.heightAnchor.constraint(equalToConstant: 10)
         
         NSLayoutConstraint.activate([
-            peculiaritiesView.topAnchor.constraint(equalTo: aboutHotelView.topAnchor, constant: 58),
+            peculiaritiesView.topAnchor.constraint(equalTo: aboutHotelLabel.bottomAnchor, constant: 16),
             peculiaritiesView.leftAnchor.constraint(equalTo: aboutHotelView.leftAnchor, constant: 16),
             peculiaritiesView.rightAnchor.constraint(equalTo: aboutHotelView.rightAnchor, constant: -16),
             containerHeightConstraint,
@@ -396,6 +396,7 @@ class HotelVC: UIViewController {
             let newLabel = UILabel()
             
             newLabel.text = tagNames[j]
+            newLabel.font = UIFont.systemFont(ofSize: 16)
             newLabel.textAlignment = .center
             newLabel.backgroundColor = UIColor(red: 251/255, green: 251/255, blue: 252/255, alpha: 1)
             newLabel.textColor = UIColor(red: 130/255, green: 135/255, blue: 150/255, alpha: 1)
@@ -430,6 +431,10 @@ class HotelVC: UIViewController {
         
     }
     
+   
+
+
+    
     private func setupDetailedDataTableView() {
         aboutHotelView.addSubview(detailedDataTableView)
         
@@ -452,9 +457,7 @@ extension HotelVC: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Identifier", for: indexPath)
-        cell.accessoryType = .disclosureIndicator
         
-       
         let model = detailDataArray[indexPath.row]
         let image = detailDataImage[indexPath.row]
         
@@ -493,6 +496,12 @@ extension HotelVC: UITableViewDelegate, UITableViewDataSource {
         secondaryLabel.textColor = listConfiguration.secondaryTextProperties.color
         customContentView.addSubview(secondaryLabel)
         
+        let accessoryImageView = UIImageView()
+        accessoryImageView.contentMode = .scaleAspectFit
+        accessoryImageView.translatesAutoresizingMaskIntoConstraints = false
+        accessoryImageView.image = UIImage(named: "check")
+        customContentView.addSubview(accessoryImageView)
+        
         // Настраиваем ограничения для специального содержимого, изображения и меток
         NSLayoutConstraint.activate([
             customContentView.leadingAnchor.constraint(equalTo: cell.contentView.leadingAnchor, constant: 16),
@@ -510,8 +519,13 @@ extension HotelVC: UITableViewDelegate, UITableViewDataSource {
             
             secondaryLabel.leadingAnchor.constraint(equalTo: imageView.trailingAnchor, constant: 8),
             secondaryLabel.topAnchor.constraint(equalTo: textLabel.bottomAnchor, constant: 4),
-            secondaryLabel.trailingAnchor.constraint(equalTo: customContentView.trailingAnchor),
-            secondaryLabel.bottomAnchor.constraint(lessThanOrEqualTo: customContentView.bottomAnchor),
+            secondaryLabel.leadingAnchor.constraint(equalTo: imageView.trailingAnchor, constant: 8),
+            //secondaryLabel.bottomAnchor.constraint(lessThanOrEqualTo: customContentView.bottomAnchor),
+            
+            accessoryImageView.trailingAnchor.constraint(equalTo: customContentView.trailingAnchor),
+            accessoryImageView.centerYAnchor.constraint(equalTo: customContentView.centerYAnchor),
+            accessoryImageView.widthAnchor.constraint(equalToConstant: 24),
+            accessoryImageView.heightAnchor.constraint(equalToConstant: 24)
         ])
         
         cell.backgroundColor = UIColor(red: 251/255, green: 251/255, blue: 252/255, alpha: 1.0)
@@ -526,9 +540,10 @@ extension HotelVC: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-            // Не выполняйте никаких действий при нажатии на ячейку
-            tableView.deselectRow(at: indexPath, animated: true)
-        }
+        // Не выполняйте никаких действий при нажатии на ячейку
+        tableView.deselectRow(at: indexPath, animated: true)
+    }
     
     
 }
+
