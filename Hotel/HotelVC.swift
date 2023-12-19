@@ -24,7 +24,7 @@ class HotelVC: UIViewController {
         let scroll = UIScrollView()
         scroll.translatesAutoresizingMaskIntoConstraints = false
         scroll.backgroundColor = UIColor(red: 232/255.0, green: 233/255.0, blue: 236/255.0, alpha: 1.0)
-        scroll.contentSize = CGSize(width: view.bounds.width, height: 990)
+        scroll.contentSize = CGSize(width: view.bounds.width, height: 922)
         return scroll
     }()
     
@@ -237,7 +237,7 @@ class HotelVC: UIViewController {
             aboutHotelView.leftAnchor.constraint(equalTo: scrollView.leftAnchor),
             aboutHotelView.topAnchor.constraint(equalTo: hotelView.bottomAnchor, constant: 8),
             aboutHotelView.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
-            aboutHotelView.heightAnchor.constraint(equalToConstant: 539)
+            aboutHotelView.heightAnchor.constraint(equalToConstant: 470)
         ])
         
     }
@@ -431,9 +431,9 @@ class HotelVC: UIViewController {
         
     }
     
-   
-
-
+    
+    
+    
     
     private func setupDetailedDataTableView() {
         aboutHotelView.addSubview(detailedDataTableView)
@@ -502,6 +502,7 @@ extension HotelVC: UITableViewDelegate, UITableViewDataSource {
         accessoryImageView.image = UIImage(named: "check")
         customContentView.addSubview(accessoryImageView)
         
+        
         // Настраиваем ограничения для специального содержимого, изображения и меток
         NSLayoutConstraint.activate([
             customContentView.leadingAnchor.constraint(equalTo: cell.contentView.leadingAnchor, constant: 16),
@@ -520,13 +521,42 @@ extension HotelVC: UITableViewDelegate, UITableViewDataSource {
             secondaryLabel.leadingAnchor.constraint(equalTo: imageView.trailingAnchor, constant: 8),
             secondaryLabel.topAnchor.constraint(equalTo: textLabel.bottomAnchor, constant: 4),
             secondaryLabel.leadingAnchor.constraint(equalTo: imageView.trailingAnchor, constant: 8),
-            //secondaryLabel.bottomAnchor.constraint(lessThanOrEqualTo: customContentView.bottomAnchor),
             
             accessoryImageView.trailingAnchor.constraint(equalTo: customContentView.trailingAnchor),
             accessoryImageView.centerYAnchor.constraint(equalTo: customContentView.centerYAnchor),
             accessoryImageView.widthAnchor.constraint(equalToConstant: 24),
-            accessoryImageView.heightAnchor.constraint(equalToConstant: 24)
+            accessoryImageView.heightAnchor.constraint(equalToConstant: 24),
+            
+            
         ])
+        
+        if indexPath.row == 1 {
+            // Добавляем разделительную линию между 1 и 2 ячейкой
+            let separatorView = UIView()
+            separatorView.translatesAutoresizingMaskIntoConstraints = false
+            separatorView.backgroundColor = UIColor.lightGray
+            cell.contentView.addSubview(separatorView)
+            
+            NSLayoutConstraint.activate([
+                separatorView.leadingAnchor.constraint(equalTo: textLabel.leadingAnchor),
+                separatorView.trailingAnchor.constraint(equalTo: cell.contentView.trailingAnchor, constant: -16),
+                separatorView.topAnchor.constraint(equalTo: cell.contentView.topAnchor),
+                separatorView.heightAnchor.constraint(equalToConstant: 1)
+            ])
+        } else if indexPath.row == 2 {
+            // Добавляем разделительную линию между 2 и 3 ячейкой
+            let separatorView = UIView()
+            separatorView.translatesAutoresizingMaskIntoConstraints = false
+            separatorView.backgroundColor = UIColor.lightGray
+            cell.contentView.addSubview(separatorView)
+            
+            NSLayoutConstraint.activate([
+                separatorView.leadingAnchor.constraint(equalTo: textLabel.leadingAnchor),
+                separatorView.trailingAnchor.constraint(equalTo: cell.contentView.trailingAnchor, constant: -16),
+                separatorView.topAnchor.constraint(equalTo: cell.contentView.topAnchor),
+                separatorView.heightAnchor.constraint(equalToConstant: 1)
+            ])
+        }
         
         cell.backgroundColor = UIColor(red: 251/255, green: 251/255, blue: 252/255, alpha: 1.0)
         
