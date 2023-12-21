@@ -7,9 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		E337E0572B34D4D50074437C /* Network Manager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E337E0562B34D4D50074437C /* Network Manager.swift */; };
+		E337E0592B34D60F0074437C /* ModelHotel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E337E0582B34D60F0074437C /* ModelHotel.swift */; };
 		E39D3A6F2B2F0DE3007E9F35 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E39D3A6E2B2F0DE3007E9F35 /* AppDelegate.swift */; };
 		E39D3A712B2F0DE3007E9F35 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E39D3A702B2F0DE3007E9F35 /* SceneDelegate.swift */; };
-		E39D3A732B2F0DE3007E9F35 /* Paid.swift in Sources */ = {isa = PBXBuildFile; fileRef = E39D3A722B2F0DE3007E9F35 /* Paid.swift */; };
 		E39D3A762B2F0DE3007E9F35 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E39D3A742B2F0DE3007E9F35 /* Main.storyboard */; };
 		E39D3A782B2F0DE5007E9F35 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E39D3A772B2F0DE5007E9F35 /* Assets.xcassets */; };
 		E39D3A7B2B2F0DE5007E9F35 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E39D3A792B2F0DE5007E9F35 /* LaunchScreen.storyboard */; };
@@ -17,10 +18,11 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		E337E0562B34D4D50074437C /* Network Manager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Network Manager.swift"; sourceTree = "<group>"; };
+		E337E0582B34D60F0074437C /* ModelHotel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelHotel.swift; sourceTree = "<group>"; };
 		E39D3A6B2B2F0DE3007E9F35 /* Hotel.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Hotel.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E39D3A6E2B2F0DE3007E9F35 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		E39D3A702B2F0DE3007E9F35 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		E39D3A722B2F0DE3007E9F35 /* Paid.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Paid.swift; sourceTree = "<group>"; };
 		E39D3A752B2F0DE3007E9F35 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		E39D3A772B2F0DE5007E9F35 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		E39D3A7A2B2F0DE5007E9F35 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -39,6 +41,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		E3880D1E2B34E978008FE725 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				E337E0582B34D60F0074437C /* ModelHotel.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
 		E39D3A622B2F0DE3007E9F35 = {
 			isa = PBXGroup;
 			children = (
@@ -60,8 +70,9 @@
 			children = (
 				E39D3A6E2B2F0DE3007E9F35 /* AppDelegate.swift */,
 				E39D3A702B2F0DE3007E9F35 /* SceneDelegate.swift */,
-				E39D3A722B2F0DE3007E9F35 /* Paid.swift */,
 				E39D3A822B2F297E007E9F35 /* HotelVC.swift */,
+				E3880D1E2B34E978008FE725 /* Model */,
+				E337E0562B34D4D50074437C /* Network Manager.swift */,
 				E39D3A742B2F0DE3007E9F35 /* Main.storyboard */,
 				E39D3A772B2F0DE5007E9F35 /* Assets.xcassets */,
 				E39D3A792B2F0DE5007E9F35 /* LaunchScreen.storyboard */,
@@ -141,10 +152,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E39D3A732B2F0DE3007E9F35 /* Paid.swift in Sources */,
 				E39D3A832B2F297E007E9F35 /* HotelVC.swift in Sources */,
 				E39D3A6F2B2F0DE3007E9F35 /* AppDelegate.swift in Sources */,
 				E39D3A712B2F0DE3007E9F35 /* SceneDelegate.swift in Sources */,
+				E337E0572B34D4D50074437C /* Network Manager.swift in Sources */,
+				E337E0592B34D60F0074437C /* ModelHotel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

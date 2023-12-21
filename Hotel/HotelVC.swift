@@ -3,6 +3,8 @@ import UIKit
 
 class HotelVC: UIViewController {
     
+    var hotelData: ModelHotel?
+    
     //MARK: - Private properties
     private lazy var hotelView: UIView = {
         let view = UIView()
@@ -37,22 +39,10 @@ class HotelVC: UIViewController {
         return button
     }()
     
-    private lazy var imageHotel: UIImageView = {
-        let image = UIImageView()
-        image.contentMode = .scaleAspectFill
-        image.image = UIImage(named: "hotel")
-        image.layer.masksToBounds = true
-        image.layer.cornerRadius = 12
-        image.translatesAutoresizingMaskIntoConstraints = false
-        return image
-    }()
-    
     private lazy var nameHotelLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = UIFont.boldSystemFont(ofSize: 22)
-        label.text = "Steigenberger Makadi"
-        
         return label
     }()
     
@@ -68,15 +58,14 @@ class HotelVC: UIViewController {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = UIFont.boldSystemFont(ofSize: 30)
-        label.text = "от 134 673 ₽"
+        
         return label
     }()
     
     private lazy var adressButton: UIButton = {
         let button = UIButton()
-        button.setTitle("Madinat Makadi, Safaga Road, Makadi Bay, Египет", for: .normal)
+        //button.setTitle("Madinat Makadi, Safaga Road, Makadi Bay, Египет", for: .normal)
         button.setTitleColor(.systemBlue, for: .normal)
-        
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
@@ -86,7 +75,7 @@ class HotelVC: UIViewController {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = UIFont.systemFont(ofSize: 16)
         label.textColor = UIColor(red: 130/255.0, green: 135/255.0, blue: 150/255.0, alpha: 1.0)
-        label.text = "за тур с перелётом"
+        //label.text = "за тур с перелётом"
         return label
     }()
     
@@ -104,7 +93,7 @@ class HotelVC: UIViewController {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = UIFont.boldSystemFont(ofSize: 16)
         label.textColor = UIColor.orange
-        label.text = "5 Превосходно"
+        //label.text = "5 Превосходно"
         return label
     }()
     
@@ -122,7 +111,6 @@ class HotelVC: UIViewController {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = UIFont.systemFont(ofSize: 16)
         label.textColor = UIColor.black
-        label.text = "Отель VIP-класса с собственными гольф полями. Высокий уровнь сервиса. Рекомендуем для респектабельного отдыха. Отель принимает гостей от 18 лет!"
         return label
     }()
     
@@ -134,8 +122,7 @@ class HotelVC: UIViewController {
         return view
     }()
     
-    private var tagNames: [String] = ["Бесплатный Wifi на всей территории отеля", "1 км до пляжа", "Бесплатный фитнес-клуб", "20 км до аэропорта"]
-    
+    private var tagNames: [String] = []
     private var tagLabels = [UILabel]()
     
     private let tagHeight:CGFloat = 29
@@ -152,24 +139,29 @@ class HotelVC: UIViewController {
         table.dataSource = self
         table.isScrollEnabled = false
         table.backgroundColor = .clear
+        table.separatorStyle = .none
         table.register(UITableViewCell.self, forCellReuseIdentifier: "Identifier")
         return table
     }()
     
     private let detailDataArray = ["Удобства", "Что включено", "Что не включено"]
     private let detailDataImage: [UIImage?] = [UIImage(named: "emoji"), UIImage(named: "tick"), UIImage(named: "close")]
-    
+        
+
     //MARK: - viewDidLoad()
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
         self.navigationItem.title = "Отель"
         
+        loadFromAPI()
         setupRoomButtonConstraints()
         setupScrollViewConstraints()
         setupHotelView()
+       
         setupAboutHotelView()
-        setupImageHotel()
         setupNameHotelLabel()
         setupRatingViewConstraints()
         setupCostLabelConstraints()
@@ -181,8 +173,49 @@ class HotelVC: UIViewController {
         setupPeculiaritiesViewConstraints()
         setupDescriptionLabelConstraints()
         setupDetailedDataTableView()
-        detailedDataTableView.separatorStyle = .none
         
+    }
+    
+    fileprivate func loadFromAPI() {
+        // Загрузка данных из сети
+        if let url = URL(string: "https://run.mocky.io/v3/d144777c-a67f-4e35-867a-cacc3b827473") {
+            NetworkManager.shared.fetchData(from: url) { result in
+                switch result {
+                case .success(let data):
+                    self.hotelData = data
+                    // Обновление UI в главном потоке
+                    DispatchQueue.main.async {
+                        self.updateUI()
+                    }
+                case .failure(let error):
+                    print("Ошибка при загрузке данных: \(error.localizedDescription)")
+                }
+            }
+        }
+    }
+    
+    private func updateUI() {
+        guard let hotelData = hotelData else { return }
+        
+        // Переписываем код с учетом новой структуры данных
+        nameHotelLabel.text = hotelData.name
+        adressButton.setTitle(hotelData.adress, for: .normal)
+        
+        costLabel.text = formatMinimalPrice(hotelData.minimalPrice)
+        priceForIt.text = hotelData.priceForIt
+        
+        ratingName.text = "\(hotelData.rating) \(hotelData.ratingName)"
+        descriptionLabel.text = hotelData.aboutTheHotel.aboutTheHotelDescription
+        
+        // Передаем URL-адреса изображений для отображения в вашем интерфейсе
+        // (поменяйте это в соответствии с вашим интерфейсом)
+        let imageURLs = hotelData.imageUrls
+        
+        // Здесь вы можете использовать imageURLs для загрузки изображений в ваш интерфейс
+        
+        tagNames = hotelData.aboutTheHotel.peculiarities
+        addTagLabels()
+        displayTagLabels()
     }
     
     //MARK: - viewDidLayoutSubviews()
@@ -217,7 +250,6 @@ class HotelVC: UIViewController {
         
     }
     
-    
     private func setupHotelView() {
         scrollView.addSubview(hotelView)
         
@@ -242,17 +274,6 @@ class HotelVC: UIViewController {
         
     }
     
-    private func setupImageHotel() {
-        hotelView.addSubview(imageHotel)
-        
-        NSLayoutConstraint.activate([
-            imageHotel.topAnchor.constraint(equalTo: hotelView.topAnchor),
-            imageHotel.heightAnchor.constraint(equalToConstant: 257),
-            imageHotel.leftAnchor.constraint(equalTo: hotelView.leftAnchor, constant: 16),
-            imageHotel.rightAnchor.constraint(equalTo: hotelView.rightAnchor, constant: -16)
-        ])
-    }
-    
     
     private func setupNameHotelLabel() {
         hotelView.addSubview(nameHotelLabel)
@@ -263,7 +284,15 @@ class HotelVC: UIViewController {
             nameHotelLabel.leftAnchor.constraint(equalTo: hotelView.leftAnchor, constant: 16),
             nameHotelLabel.rightAnchor.constraint(equalTo: hotelView.rightAnchor, constant: -16)
         ])
+        
+        // Set up label properties for auto-shrinking
+        nameHotelLabel.minimumScaleFactor = 0.5
+        nameHotelLabel.numberOfLines = 1
+        nameHotelLabel.adjustsFontSizeToFitWidth = true
+        nameHotelLabel.textAlignment = .center // You can adjust this based on your preference
     }
+    
+    
     
     private func setupRatingViewConstraints() {
         hotelView.addSubview(ratingView)
@@ -431,10 +460,6 @@ class HotelVC: UIViewController {
         
     }
     
-    
-    
-    
-    
     private func setupDetailedDataTableView() {
         aboutHotelView.addSubview(detailedDataTableView)
         
@@ -448,7 +473,13 @@ class HotelVC: UIViewController {
         ])
     }
     
+    private func formatMinimalPrice(_ price: Int) -> String {
+        return "от \(price.formattedWithSeparator()) ₽"
+    }
+   
 }
+
+//MARK: - UITableViewDelegate, UITableViewDataSource
 
 extension HotelVC: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -526,8 +557,6 @@ extension HotelVC: UITableViewDelegate, UITableViewDataSource {
             accessoryImageView.centerYAnchor.constraint(equalTo: customContentView.centerYAnchor),
             accessoryImageView.widthAnchor.constraint(equalToConstant: 24),
             accessoryImageView.heightAnchor.constraint(equalToConstant: 24),
-            
-            
         ])
         
         if indexPath.row == 1 {
@@ -559,8 +588,6 @@ extension HotelVC: UITableViewDelegate, UITableViewDataSource {
         }
         
         cell.backgroundColor = UIColor(red: 251/255, green: 251/255, blue: 252/255, alpha: 1.0)
-        
-        
         return cell
     }
     
@@ -574,6 +601,13 @@ extension HotelVC: UITableViewDelegate, UITableViewDataSource {
         tableView.deselectRow(at: indexPath, animated: true)
     }
     
-    
 }
 
+extension Int {
+    func formattedWithSeparator() -> String {
+        let numberFormatter = NumberFormatter()
+                numberFormatter.numberStyle = .decimal
+                numberFormatter.groupingSeparator = " " // Используем пробел вместо запятой
+                return numberFormatter.string(from: NSNumber(value: self)) ?? ""
+    }
+}
